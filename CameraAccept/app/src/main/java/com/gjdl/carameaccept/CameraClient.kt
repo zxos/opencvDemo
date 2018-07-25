@@ -52,11 +52,12 @@ class CameraClient(val ip:String){
                     while (!isInterrupt){
                         val buffer = br.readLine()
                         //Log.e("CameraClient", buffer)
-                        Log.e("CameraClient", buffer.toByteArray().toString())
+                        Log.e("CameraClient", buffer.toString())
                         //val img = ImgDataBean.ImgData.parseFrom(buffer.toByteArray(Charsets.ISO_8859_1))
                         //val img = ImgDataBean.ImgData.newBuilder().mergeFrom(buffer.toByteArray(Charsets.ISO_8859_1)).build()
                         //Log.e("9999999999", img.msgType.toString())
                         //Log.e("9999999999", img.imgdata.toString())
+//                        Imgcodecs.imdecode()
 
                         //val byteBuffer = ByteBuffer.wrap(buffer.toByteArray())
 

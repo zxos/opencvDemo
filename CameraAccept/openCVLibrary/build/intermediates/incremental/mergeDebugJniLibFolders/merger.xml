@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\Android\project\CarameAccept\openCVLibrary\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="D:\Android\project\CarameAccept\openCVLibrary\src\debug\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="D:\Android\gitProject\opencvDemo\CameraAccept\openCVLibrary\src\main\jniLibs"/></dataSet><dataSet config="debug"><source path="D:\Android\gitProject\opencvDemo\CameraAccept\openCVLibrary\src\debug\jniLibs"/></dataSet></merger>
