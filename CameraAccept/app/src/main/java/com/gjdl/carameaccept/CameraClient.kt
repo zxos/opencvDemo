@@ -2,6 +2,7 @@ package com.gjdl.carameaccept
 
 import android.util.Log
 import cn.csg.gjdl.robot.ImgDataBean
+import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
@@ -44,24 +45,27 @@ class CameraClient(val ip:String){
 
 
                 if (client.isConnected){
-                    Log.e("CameraClient", "------------")
+                    Log.e("CameraClient", "-----isConnected-------")
 
                     val ios = client.getInputStream()
                     val isr = InputStreamReader(ios)
                     val br  = BufferedReader(isr)
+
+
                     while (!isInterrupt){
-                        val buffer = br.readLine()
+
+                        var str = null
+
+
+                        val buffer = br.readLines()
                         //Log.e("CameraClient", buffer)
                         Log.e("CameraClient", buffer.toString())
-                        //val img = ImgDataBean.ImgData.parseFrom(buffer.toByteArray(Charsets.ISO_8859_1))
-                        //val img = ImgDataBean.ImgData.newBuilder().mergeFrom(buffer.toByteArray(Charsets.ISO_8859_1)).build()
-                        //Log.e("9999999999", img.msgType.toString())
-                        //Log.e("9999999999", img.imgdata.toString())
-//                        Imgcodecs.imdecode()
+                        //val img = ImgDataBean.ImgData.parseFrom(buffer.toByteArray(Charsets.UTF_8))
+                        //val img = ImgDataBean.ImgData.newBuilder().mergeFrom(buffer.toByteArray(Charsets.UTF_8)).build()
+                        //Log.e("CameraClient", img.msgType.toString())
+                        //Log.e("CameraClient", img.imgdata.toString())
 
-                        //val byteBuffer = ByteBuffer.wrap(buffer.toByteArray())
 
-                        //val img = Imgcodecs.imdecode(MatOfByte(buffer.toByte()), 1)
 
 
                     }

@@ -56,7 +56,8 @@ dependencies {
     //    }
     implementation 'com.google.protobuf:protobuf-java:3.6.0'
 
-    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
+    implementation 'com.github.vilyever:AndroidSocketClient:3.0.3'
+    implementation fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
 }
 
 
