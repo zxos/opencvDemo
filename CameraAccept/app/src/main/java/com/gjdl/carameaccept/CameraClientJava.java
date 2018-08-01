@@ -1,8 +1,11 @@
 package com.gjdl.carameaccept;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.vilyever.socketclient.SocketClient;
 import com.vilyever.socketclient.helper.SocketClientDelegate;
 import com.vilyever.socketclient.helper.SocketClientReceivingDelegate;
@@ -10,12 +13,20 @@ import com.vilyever.socketclient.helper.SocketPacketHelper;
 import com.vilyever.socketclient.helper.SocketResponsePacket;
 import com.vilyever.socketclient.util.CharsetUtil;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import cn.csg.gjdl.robot.ImgDataBean;
 
 public class CameraClientJava {
 
@@ -31,48 +42,19 @@ public class CameraClientJava {
 
     private SocketClient client;
 
-    public CameraClientJava(String ip){
-        this.ip = ip;
+    private OnListener listener;
 
+    public interface OnListener{
 
-        initClient();
+        void onResponse(byte[] data);
     }
 
 
-
-
-    private Thread task = new Thread(){
-        @Override
-        public void run() {
-            try {
-                Socket client = new Socket(ip, 8880);
-
-                Log.e("CameraClient", " " + Thread.currentThread().getName());
-                Log.e("CameraClient", ip);
-
-                if (client.isConnected()){
-                    Log.e("CameraClient", "-----isConnected-------");
-
-                    InputStream ios = client.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(ios);
-                    BufferedReader br  = new BufferedReader(isr);
-
-
-                    while (!isInterrupt){
-
-                        String str = null;
-
-                        while ((str = br.readLine()) != null){
-                            Log.e("CameraClient", str);
-                        }
-                    }
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+    public CameraClientJava(String ip, OnListener listener){
+        this.ip = ip;
+        this.listener = listener;
+        initClient();
+    }
 
 
     public void  start(){
@@ -93,16 +75,13 @@ public class CameraClientJava {
         client.getAddress().setConnectionTimeout(15* 1000);
         client.setCharsetName(CharsetUtil.UTF_8);
 //        client.getHeartBeatHelper().setSendHeartBeatEnabled(false);
-//        client.getSocketPacketHelper().setReadStrategy(SocketPacketHelper.ReadStrategy.Manually);
-
+        client.getSocketPacketHelper().setReadStrategy(SocketPacketHelper.ReadStrategy.AutoReadToTrailer);
+       client.getSocketPacketHelper().setReceiveTrailerData("<end>".getBytes());
 
         client.registerSocketClientDelegate(new SocketClientDelegate() {
             @Override
             public void onConnected(SocketClient client) {
                 Log.e("999999999", "onConnected");
-                if (client.getSocketPacketHelper().getReadStrategy() == SocketPacketHelper.ReadStrategy.Manually) {
-                    client.readDataToLength(10 * 1024);
-                }
 
             }
 
@@ -114,9 +93,14 @@ public class CameraClientJava {
             @Override
             public void onResponse(SocketClient client, @NonNull SocketResponsePacket responsePacket) {
                 Log.e("999999999", "onResponse");
-//                byte[] data = responsePacket.getData(); // 获取接收的byte数组，不为null
-                String message = responsePacket.getMessage(); // 获取按默认设置的编码转化的String，可能为null
-                Log.e("999999999", message);
+                byte[] data = responsePacket.getData(); // 获取接收的byte数组，不为null
+               // String message = responsePacket.getMessage(); // 获取按默认设置的编码转化的String，可能为null
+                //Log.e("999999999", message);
+                //Log.e("999999999", String.valueOf(data.length));
+                //Log.e("999999999", Arrays.toString(data));
+                if (listener != null && data != null)
+                    listener.onResponse(data);
+
             }
         });
 

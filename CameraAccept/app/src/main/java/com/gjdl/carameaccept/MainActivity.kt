@@ -9,15 +9,19 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import cn.csg.gjdl.robot.ImgDataBean
 import kotlinx.android.synthetic.main.activity_main.*
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Scalar
+import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CameraClientJava.OnListener {
+
 
     var ip = ""
     var client: CameraClientJava ?= null
@@ -40,7 +44,10 @@ class MainActivity : AppCompatActivity() {
 
         initlayout()
 
-        startServer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun initlayout(){
@@ -60,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         btn_connect.setOnClickListener {
             if (ip != "") {
                 if (client == null)
-                    client = CameraClientJava(ip)
+                    client = CameraClientJava(ip , this)
                 client?.start()
             }
         }
@@ -86,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
         getSp().edit().putString("ip", ip).apply()
 
-        client = CameraClientJava(ip)
+        client = CameraClientJava(ip, this)
     }
 
 
@@ -94,25 +101,53 @@ class MainActivity : AppCompatActivity() {
         val src = Mat()
         val temp= Mat()
         val dst = Mat()
-        val t   = Mat(144,144, CvType.CV_8UC4,Scalar(1.0,1.0, 1.0))
- //       Utils.bitmapToMat(selectbp, t)
         Utils.bitmapToMat(selectbp, src)
         Imgproc.cvtColor(src, temp, Imgproc.COLOR_BGRA2BGR)
         Imgproc.cvtColor(temp,dst, Imgproc.COLOR_BGR2GRAY)
         Utils.matToBitmap(dst, selectbp)
-
-        //Utils.matToBitmap(dst, selectbp)
         myImageView.setImageBitmap(selectbp)
 
 
-        //Log.e("9999999999999", t.toString())
     }
 
 
-    private fun startServer(){
+
+
+
+    override fun onResponse(data: ByteArray) {
+
+        val imgdata = ImgDataBean.ImgData.parseFrom(data) ?: return
+
+        when(imgdata.msgType){
+            1   ->{
+                showImg(imgdata)
+            }
+        }
+
+    }
+
+//    Imgproc.matchTemplate(mFind, Input, mResult, Imgproc.TM_SQDIFF) ;
+//    bmp3= Bitmap.createBitmap(mResult.cols(),  mResult.rows(),Bitmap.Config.ARGB_8888);
+//    Core.normalize(mResult, mResult8u, 0, 255, Core.NORM_MINMAX, CvType.CV_8U);
+//    Utils.matToBitmap(mResult8u, bmp3);
+//    iv2.setImageBitmap(bmp3);
+
+    val bitmap = Bitmap.createBitmap(480, 640, Bitmap.Config.ARGB_8888)
+    var a = true
+    private fun showImg(imgData: ImgDataBean.ImgData){
+
+
+        val src = Mat(640, 480, CvType.CV_8U)
+        src.put(0, 0, imgData.imgdata.toByteArray())
+        Utils.matToBitmap(src, bitmap)
+        camera_view.setBitmap(bitmap)
+
 
 
     }
+
+
+
 }
 
 

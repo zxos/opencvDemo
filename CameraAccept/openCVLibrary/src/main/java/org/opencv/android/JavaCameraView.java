@@ -1,5 +1,6 @@
 package org.opencv.android;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;

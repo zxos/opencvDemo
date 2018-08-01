@@ -6,9 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
-    <com.gjdl.carameaccept.CameraView
-        android:id="@+id/cv_pic"
+    <!--<com.gjdl.carameaccept.CameraView-->
+        <!--android:id="@+id/cv_pic"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"></com.gjdl.carameaccept.CameraView>-->
+
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/javaCameraView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.gjdl.carameaccept.CameraView>
+        android:layout_height="match_parent"
+        app:camera_id="back"
+        app:show_fps="true" />
+
 
 </android.support.constraint.ConstraintLayout>

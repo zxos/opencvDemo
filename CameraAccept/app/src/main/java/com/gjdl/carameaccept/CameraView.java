@@ -102,6 +102,17 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
     };
 
 
+    public void setBitmap(Bitmap bitmap){
+
+
+        Canvas canvas = holder.lockCanvas();
+
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        holder.unlockCanvasAndPost(canvas);
+
+    }
+
 
     private class DrawThread extends Thread{
 

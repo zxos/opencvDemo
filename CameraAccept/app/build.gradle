@@ -50,14 +50,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.yanzhenjie:andserver:1.1.4'
     implementation project(':openCVLibrary')
+    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
     //    compile "com.google.protobuf:protobuf-lite:3.0.0"
     //    compile ('com.squareup.retrofit2:converter-protobuf:2.2.0') {
     //        exclude group: 'com.google.protobuf', module: 'protobuf-java'
     //    }
     implementation 'com.google.protobuf:protobuf-java:3.6.0'
-
     implementation 'com.github.vilyever:AndroidSocketClient:3.0.3'
-    implementation fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }
 
 
